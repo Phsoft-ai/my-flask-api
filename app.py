@@ -133,13 +133,14 @@ def parse_bible_text(bible_text_input):
         print(f"Warning: Failed to parse '{bible_text_input}'")
     return results
 
+# --- timestamp_to_qt_data_ms 함수 수정 ---
 def timestamp_to_qt_data_ms(timestamp_ms, timezone_str='Asia/Seoul'):
     """
     밀리초 단위 타임스탬프와 시간대 문자열을 받아 QT 구절 파싱 결과를 반환합니다.
     Args:
         timestamp_ms (int): 밀리초 단위의 타임스탬프 (UTC 기준).
         timezone_str (str): 원하는 시간대 문자열 (예: 'Asia/Seoul', 'America/New_York').
-                            기본값은 'Asia/Seoul' (한국 표준시).
+                            **기본값은 'Asia/Seoul' (한국 표준시)입니다.**
     Returns:
         list: 파싱된 성경 구절 데이터 리스트. 에러 발생 시 빈 리스트.
     """
@@ -175,12 +176,15 @@ def timestamp_to_qt_data_ms(timestamp_ms, timezone_str='Asia/Seoul'):
 def get_qt_bible_data():
     """
     쿼리 파라미터로 밀리초 단위 타임스탬프와 시간대 문자열을 받아 QT 성경 구절 데이터를 반환합니다.
+    **'timezone' 파라미터가 제공되지 않으면 기본적으로 'Asia/Seoul' (한국 시간)을 사용합니다.**
     예시:
-    - 한국 시간: /get-qt-bible-data?timestamp_ms=1747551764480&timezone=Asia/Seoul
+    - 한국 시간 (기본값 사용): /get-qt-bible-data?timestamp_ms=1747551764480
+    - 한국 시간 (명시적 지정): /get-qt-bible-data?timestamp_ms=1747551764480&timezone=Asia/Seoul
     - 뉴욕 시간: /get-qt-bible-data?timestamp_ms=1747551764480&timezone=America/New_York
     """
     timestamp_ms_str = request.args.get('timestamp_ms')
-    timezone_str = request.args.get('timezone', 'Asia/Seoul') # 기본값은 'Asia/Seoul'
+    # 기본값을 'Asia/Seoul'로 설정하여 한국 시간으로 동작하도록 함
+    timezone_str = request.args.get('timezone', 'Asia/Seoul') 
 
     if not timestamp_ms_str:
         return jsonify({"error": "timestamp_ms parameter is required"}), 400
